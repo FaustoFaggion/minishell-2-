@@ -6,7 +6,7 @@
 /*   By: fagiusep <fagiusep@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 14:51:10 by fagiusep          #+#    #+#             */
-/*   Updated: 2022/04/23 10:47:44 by fagiusep         ###   ########.fr       */
+/*   Updated: 2022/04/23 10:53:48 by fagiusep         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ static int	count_tab(t_tkn *tkn, int end)
 		if (ft_strncmp(tkn->lexemas[end], "PIPE", 4) == 0)
 		{
 			tkn->pipes++;
+			end++;
 			break ;
 		}
 		else if (ft_strncmp(tkn->lexemas[end], "WORD", 4) == 0
