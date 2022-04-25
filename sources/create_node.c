@@ -2,6 +2,8 @@
 
 static void	malloc_node_elements(t_tkn *tkn, t_cmd *s_cmd)
 {
+	s_cmd->pipes = tkn->pipes;
+	s_cmd->next = NULL;
 	s_cmd->words = NULL;
 	s_cmd->redirects = NULL;
 	s_cmd->here_docs = NULL;
@@ -23,7 +25,7 @@ static void	fill_node_elements_cont(t_tkn *tkn, char **array, int start)
 		while (array[i] != NULL)
 			i++;
 	}
-	array[i] = tkn->tokens[start];
+	array[i] = ft_strdup(tkn->tokens[start]);
 	i++;
 	array[i] = NULL;
 
@@ -52,53 +54,30 @@ static int	fill_node_elements(t_tkn *tkn, t_cmd *s_cmd, int start)
 	return (start);
 }
 
-void	create_node(t_tkn *tkn, int start, int end)
+void	create_node(t_tkn *tkn, t_cmd **cmd_tab, int start, int end)
 {
 	t_cmd	*s_cmd;
-	int		i;
+	t_cmd	*last;
 
+	printf("entrei\n");
 	s_cmd = (t_cmd *)malloc(sizeof(t_cmd));
 	if (!s_cmd)
 		return ;
 	malloc_node_elements(tkn, s_cmd);
 	while (start < end)
 		start = fill_node_elements(tkn, s_cmd, start);
-
-
-	i = 0;
-	printf ("WORDS = ");
-	if (s_cmd->words != NULL)
+	if (*cmd_tab == NULL)
 	{
-		while (s_cmd->words != NULL && s_cmd->words[i] != NULL)
-		{
-			printf ("%s  ", s_cmd->words[i]);
-			i++;
-		}
-		printf ("%s \n", s_cmd->words[i]);
+		*cmd_tab = s_cmd;
+//		printf("cmd_tab words %s\n", cmd_tab->words[0]);
 	}
-	i = 0;
-	printf ("REDIRECTS = ");
-	if (s_cmd->redirects != NULL)
+	else
 	{
-		while (s_cmd->redirects[i] != NULL)
-		{
-			printf ("%s  ", s_cmd->redirects[i]);
-			i++;
-		}
-		printf ("%s\n", s_cmd->redirects[i]);
+//		printf("cmd_tab words %s\n", cmd_tab->words[0]);
+		last = *cmd_tab;
+		while (last->next != NULL)
+			last = last->next;
+		last->next = s_cmd;
 	}
-	printf ("\n");
-	i = 0;
-	printf ("HERE_DOCS = ");
-	if (s_cmd->here_docs != NULL)
-	{
-		while (s_cmd->here_docs != NULL && s_cmd->here_docs[i] != NULL)
-		{
-			printf ("%s  ", s_cmd->here_docs[i]);
-			i++;
-		}
-		printf ("%s\n", s_cmd->here_docs[i]);
-	}
-	printf ("\n");
 }
 

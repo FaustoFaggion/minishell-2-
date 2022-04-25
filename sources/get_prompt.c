@@ -32,7 +32,7 @@ static int	check_double_quote(t_tkn *tkn)
 	return (is_clear);
 }
 
-int		get_prompt(t_tkn *tkn)
+int		get_prompt(t_tkn *tkn, t_cmd **cmd_tab)
 {
 	char	*line;
 	int		ret;
@@ -42,8 +42,8 @@ int		get_prompt(t_tkn *tkn)
 	free(line);
 	if (!tkn->line)
 	{
-		exit_shell(tkn);
-		free_tab(&tkn->envp, tkn->envp_count);
+		exit_shell(tkn, cmd_tab);
+	//	free_tab(&tkn->envp, tkn->envp_count);
 		rl_clear_history();
 		exit(0);
 	}

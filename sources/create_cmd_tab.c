@@ -1,17 +1,72 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_tab.c                                          :+:      :+:    :+:   */
+/*   create_cmd_tab.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fagiusep <fagiusep@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 14:51:10 by fagiusep          #+#    #+#             */
-/*   Updated: 2022/04/23 10:53:48 by fagiusep         ###   ########.fr       */
+/*   Updated: 2022/04/25 20:02:16 by fagiusep         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	printf_cmd_tab(t_cmd *cmd_tab)
+{
+	int		stop;
+	int		i;
+	t_cmd	*s_cmd;
+	int		x;
+	
+	s_cmd = cmd_tab;
+	stop = 0;
+	x = 0;
+	while (stop == 0)
+	{
+		i = 0;
+		printf ("s_cmd[%d]->words = ", x);
+		if (s_cmd->words != NULL)
+		{
+			while (s_cmd->words[i] != NULL)
+			{
+				printf ("%s  ", s_cmd->words[i]);
+				i++;
+			}
+			printf ("%s  ", s_cmd->words[i]);
+		}
+			printf ("\n");
+			i = 0;
+			printf ("s_cmd[%d]->redirects = ", x);
+		if (s_cmd->redirects != NULL)
+		{
+			while (s_cmd->redirects[i] != NULL)
+			{
+				printf ("%s  ", s_cmd->redirects[i]);
+				i++;
+			}
+			printf ("%s  ", s_cmd->redirects[i]);
+		}
+			printf ("\n");
+			i = 0;
+			printf ("s_cmd[%d]->here_docs = ", x);
+		if (s_cmd->here_docs != NULL)
+		{
+			while (s_cmd->here_docs[i] != NULL)
+			{
+				printf ("%s  ", s_cmd->here_docs[i]);
+				i++;
+			}
+			printf ("%s  ", s_cmd->here_docs[i]);
+		}
+			printf ("\n");
+		if (s_cmd->next != NULL)
+			s_cmd = s_cmd->next;
+		else
+			stop = 1;
+		x++;
+	}
+}
 
 static int	count_tab(t_tkn *tkn, int end)
 {
@@ -49,21 +104,24 @@ static int	count_tab(t_tkn *tkn, int end)
 	printf("words %d\n", tkn->words);
 	printf("redirects %d\n", tkn->redirects);
 	printf("here_docs %d\n", tkn->here_docs);
+	printf ("PIPES %d\n", tkn->pipes);
 	return (end);
 }
 
-void	cmd_tab(t_tkn *tkn)
+void	create_cmd_tab(t_tkn *tkn, t_cmd **cmd_tab)
 {
 	int	start;
 	int	end;
 
 	end = 0;
 	start = 0;
+	*cmd_tab = NULL;
 	while (tkn->lexemas[start] != NULL)
 	{
 		end = count_tab(tkn, end);
-		create_node(tkn, start, end);
+		create_node(tkn, cmd_tab, start, end);
 		start = end;
 	}
+//	printf_cmd_tab(*cmd_tab);
 	
 }

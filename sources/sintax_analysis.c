@@ -6,16 +6,15 @@
 /*   By: fagiusep <fagiusep@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 15:59:12 by fagiusep          #+#    #+#             */
-/*   Updated: 2022/04/20 14:42:32 by fagiusep         ###   ########.fr       */
+/*   Updated: 2022/04/25 18:53:17 by fagiusep         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	sintax_error(t_tkn *tkn, char *token)
+static void	sintax_error(char *token)
 {
 	setup_error(token, 3);
-	exit_shell(tkn);
 }
 
 static int	check_cmd(t_tkn *tkn, int i, char *token)
@@ -23,7 +22,6 @@ static int	check_cmd(t_tkn *tkn, int i, char *token)
 	if (tkn->lexemas[++i] == NULL)
 	{
 		setup_error(token, 4);
-		exit_shell(tkn);
 		return (-1);
 	}
 	else
@@ -33,7 +31,6 @@ static int	check_cmd(t_tkn *tkn, int i, char *token)
 		else
 		{
 			setup_error(token, 5);
-			exit_shell(tkn);
 			return (-1);
 		}
 	}
@@ -44,7 +41,7 @@ static int	check_pipe(t_tkn *tkn, int i, char *token)
 {
 	if (tkn->lexemas[++i] == NULL || ft_strncmp(tkn->lexemas[i], "PIPE", 4) == 0)
 	{
-		sintax_error(tkn, token);
+		sintax_error(token);
 		return (-1);
 	}	
 	return (i);
@@ -83,7 +80,7 @@ int	sintax_analysis(t_tkn *tkn)
 	i = 0;
 	if (ft_strncmp(tkn->lexemas[i], "PIPE", 4) == 0)
 	{
-		sintax_error(tkn, tkn->tokens[i]);
+		sintax_error(tkn->tokens[i]);
 		return (1);
 	}
 	if (check_sintax(tkn, i) == 1)

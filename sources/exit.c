@@ -6,7 +6,7 @@
 /*   By: fagiusep <fagiusep@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 11:19:26 by fagiusep          #+#    #+#             */
-/*   Updated: 2022/04/20 10:03:47 by fagiusep         ###   ########.fr       */
+/*   Updated: 2022/04/25 19:54:46 by fagiusep         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,36 +38,48 @@ static void	exit_utils(t_tkn *tkn)
 		free_tab(&tkn->lexemas, tkn->tkn_count);
 	if (tkn->line != NULL)
 		free(tkn->line);
+	if (tkn->logname != NULL)
+		free(tkn->logname);
 	if (tkn->path_0 != NULL)
 		free(tkn->path_0);
 	free_tab(&tkn->path, tkn->path_count);
 }
 
-void	exit_shell(t_tkn *tkn)
+void	exit_shell(t_tkn *tkn, t_cmd **cmd_tab)
 {
-	int	x;
-	int	y;
+	int		i;
+	t_cmd	*swap;
 
-	x = 0;
-	if (tkn->cmd != NULL)
+	if (cmd_tab != NULL)
 	{
-		while (x < tkn->cmd_count)
+		while (*cmd_tab!= NULL)
 		{
-			y = 0;
-			while (tkn->cmd[x][y] != NULL)
+			i = 0;
+			if ((*cmd_tab)->words != NULL)
 			{
-				free(tkn->cmd[x][y]);
-				free(tkn->cmd_lex[x][y]);
-				y++;
+				while ((*cmd_tab)->words[i] != NULL)
+					i++;
+				free_tab(&(*cmd_tab)->words, i);
 			}
-			free(tkn->cmd[x]);
-			free(tkn->cmd_lex[x]);
-			x++;
+			i = 0;
+			if ((*cmd_tab)->redirects != NULL)
+			{
+				while ((*cmd_tab)->redirects[i] != NULL)
+					i++;
+				free_tab(&(*cmd_tab)->redirects, i);
+			}
+			i = 0;
+			if ((*cmd_tab)->here_docs != NULL)
+			{
+				while ((*cmd_tab)->here_docs[i] != NULL)
+					i++;
+				free_tab(&(*cmd_tab)->here_docs, i);
+			}
+		
+		swap = *cmd_tab;
+		*cmd_tab = (*cmd_tab)->next;
+		free(swap);
 		}
-		free(tkn->cmd);
-		tkn->cmd = NULL;
-		free(tkn->cmd_lex);
-		tkn->cmd_lex = NULL;
 	}
 	exit_utils(tkn);
 }

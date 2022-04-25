@@ -27,6 +27,7 @@ typedef struct s_cmd
 	char			**words;
 	char			**redirects;
 	char			**here_docs;
+	int				pipes;
 	struct s_cmd	*next;
 }	t_cmd;
 
@@ -38,17 +39,18 @@ typedef struct s_tkn
 	char	**lexemas;
 	char	**tokens;
 	int		tkn_count;
+	char	**envp;
+	int		envp_count;
+	char	**path;
+	int		path_count;
+	char	*path_0;
+	char	*logname;
 	int		cmd_count;
 	int		len;
 	int		fd_out;
 	int		fd_in;
-	char	**envp;
-	int		envp_count;
 	char	**amb_v;
 	int		amb_v_count;
-	char	**path;
-	int		path_count;
-	char	*path_0;
 	int		exp_start;
 	int		exp_flag;
 	int		exit_signal;
@@ -59,7 +61,9 @@ typedef struct s_tkn
 	int		here_docs;
 }	t_tkn;
 
-int		get_prompt(t_tkn *tkn);
+void	printf_cmd_tab(t_cmd *cmd_tab);
+
+int		get_prompt(t_tkn *tkn, t_cmd **cmd_tab);
 
 int		token_analysis(t_tkn *tkn);
 
@@ -67,9 +71,14 @@ void	lexical_analysis(t_tkn *tkn);
 
 int		sintax_analysis(t_tkn *tkn);
 
-void	expansion_envp(t_tkn *tkn);
+void	create_cmd_tab(t_tkn *tkn, t_cmd **cmd_tab);
 
-void	expansion(t_tkn *tkn);
+void	create_node(t_tkn *tkn,t_cmd **cmd_tab, int start, int end);
+
+void	expansion(t_tkn *tkn, t_cmd **cmd_tab);
+
+
+void	expansion_envp(t_tkn *tkn);
 
 int		prepare_quote(t_tkn **tkn, char **token, int j, int i);
 
@@ -78,10 +87,6 @@ int		prepare_envp(t_tkn **tkn, char **quote, int j);
 int		join_token(char **quote, char **temp, char **exp_envp, char **temp_2);
 
 void	quoted_envp(char **tkn);
-
-void	cmd_tab(t_tkn *tkn);
-
-void	create_node(t_tkn *tkn, int start, int end);
 
 int		cmd_word(t_tkn *tkn, int i);
 
@@ -127,7 +132,7 @@ void	handle_signal_here_doc(void);
 
 void	setup_error(char *arg, int flag);
 
-void	exit_shell(t_tkn *tkn);
+void	exit_shell(t_tkn *tkn, t_cmd **cmd_tab);
 
 void	exit_shell_quote(t_tkn *tkn, int i);
 

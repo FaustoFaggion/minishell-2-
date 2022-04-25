@@ -17,13 +17,13 @@ SRC_FILES		=	minishell.c \
 					token_analysis.c \
 					lexical_analysis.c \
 					sintax_analysis.c \
-					cmd_tab.c \
-					setup_error.c \
+					create_cmd_tab.c \
 					create_node.c \
+					expansion.c \
+					setup_error.c \
 					exit.c \
 					exit_utils.c \
-				#	expansion.c \
-					expansion_utils.c \
+				#	expansion_utils.c \
 					expansion_d_quote.c \
 					expansion_envp.c \
 					cmd_tab_utils.c \
