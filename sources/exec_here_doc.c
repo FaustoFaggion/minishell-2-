@@ -6,7 +6,7 @@
 /*   By: fagiusep <fagiusep@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/26 17:24:54 by fagiusep          #+#    #+#             */
-/*   Updated: 2022/04/26 14:24:17 by fagiusep         ###   ########.fr       */
+/*   Updated: 2022/04/26 15:45:37 by fagiusep         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,13 @@ static void	exec_cmd_less(t_tkn *tkn, int i)
 	else
 		dup2(tkn->fd_in, STDIN_FILENO);
 }
-
-static void	wr_line(char *tkn, int limiter, int fd[])
+*/
+static void	wr_line(char *limiter, int len, int fd[])
 {
 	char	*line;
 
 	close(fd[0]);
-	handle_signal_child();
+//	handle_signal_child();
 	while (1)
 	{
 		write(1, "> ", 2);
@@ -41,9 +41,9 @@ static void	wr_line(char *tkn, int limiter, int fd[])
 			write(2, "aviso de erro here_doc", 22);
 			break ;
 		}
-		if (ft_strncmp(tkn, line, limiter) == 0)
+		if (ft_strncmp(limiter, line, len) == 0)
 		{
-			if (line[limiter] == '\n')
+			if (line[len] == '\n')
 			{
 				free(line);
 				ft_get_next_line(-1);
@@ -61,28 +61,51 @@ static void	wr_line(char *tkn, int limiter, int fd[])
 	exit(0);
 }
 
-static int	exec_here_doc(t_tkn *tkn, int i)
+static int	exec_cmd(char *limiter)
 {
 	int	fd[2];
-	int	limiter;
+	int	len;
 	int	pid;
 	int	wstatus;
 	
 	if (pipe(fd) == -1)
 		exit(write(1, "pipe error\n", 11));
-	limiter = ft_strlen(tkn->cmd[i][1]);
+	len = ft_strlen(limiter);
 	pid = fork();
 	if (pid < 0)
 		exit(write(1, "fork error\n", 11));
 	if (pid == 0)
-		wr_line(tkn->cmd[i][1], limiter, fd);
+		wr_line(limiter, len, fd);
 	waitpid(pid, &wstatus, 0);
 	if (!WIFSIGNALED(wstatus))
 		global_exit = WEXITSTATUS(wstatus);
-	handle_signal_parent();
-	dup2(fd[0], STDIN_FILENO);
+//	handle_signal_parent();
 	close(fd[1]);
-	close(fd[0]);
-	return (2);
+	return (fd[0]);
 }
-*/
+
+void	exec_here_doc(t_cmd **cmd_tab)
+{
+	t_cmd	*s_cmd;
+	int		i;
+	int 	fd;
+	
+	s_cmd = *cmd_tab;
+	while (s_cmd != NULL)
+	{
+		if (s_cmd->here_docs != NULL)
+		{
+			i = 0;
+			while (s_cmd->here_docs[i] != NULL)
+			{
+				i++;
+				fd = exec_cmd(s_cmd->here_docs[i]);
+				i++;
+			}
+		}
+		s_cmd = s_cmd->next;
+		if (s_cmd == NULL)
+			dup2(fd, STDIN_FILENO);
+		close(fd);
+	}
+}

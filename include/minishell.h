@@ -91,7 +91,7 @@ void	quoted_envp(char **tkn);
 
 void	redirection(t_cmd **cmd_tab);
 
-
+void	exec_here_doc(t_cmd **cmd_tab);
 
 int		cmd_word(t_tkn *tkn, int i);
 
