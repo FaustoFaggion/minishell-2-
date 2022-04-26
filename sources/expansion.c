@@ -6,12 +6,12 @@
 /*   By: fagiusep <fagiusep@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 16:07:10 by fagiusep          #+#    #+#             */
-/*   Updated: 2022/04/26 10:58:36 by fagiusep         ###   ########.fr       */
+/*   Updated: 2022/04/26 11:02:11 by fagiusep         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-/*
+
 static int	s_quoted(char **tkn, int j)
 {
 	int	k;
@@ -30,7 +30,6 @@ static int	s_quoted(char **tkn, int j)
 	(*tkn)[j + k] = '\0';
 	return (j - 1);
 }
-*/
 
 void	expansion(t_tkn *tkn, t_cmd **cmd_tab)
 {
@@ -63,9 +62,9 @@ void	expansion(t_tkn *tkn, t_cmd **cmd_tab)
 					j = prepare_quote(&tkn, &cmd->words[i], j);
 					printf("depois j= %d\n", j);
 				}
-/*				else if (tkn->tokens[i][j] == '\'')
-					j = s_quoted(&tkn->tokens[i], j);
-*/				j++;
+				else if (cmd->words[i][j] == '\'')
+					j = s_quoted(&cmd->words[i], j);
+				j++;
 			}
 			i++;
 		}
