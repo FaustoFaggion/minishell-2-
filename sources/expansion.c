@@ -6,7 +6,7 @@
 /*   By: fagiusep <fagiusep@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 16:07:10 by fagiusep          #+#    #+#             */
-/*   Updated: 2022/04/26 11:02:11 by fagiusep         ###   ########.fr       */
+/*   Updated: 2022/04/26 13:42:44 by fagiusep         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,42 +35,36 @@ void	expansion(t_tkn *tkn, t_cmd **cmd_tab)
 {
 	int		i;
 	int		j;
-	int		flag;
 	t_cmd	*cmd;
-	
-	flag = 0;
+
 	cmd = *cmd_tab;
-	while (flag == 0)
+	while (cmd != NULL)
 	{
 		i = 0;
-		while (cmd->words[i] != NULL)
+		if (cmd->words != NULL)
 		{
-			j = 0;
-			while (cmd->words[i][j] != '\0')
+			while (cmd->words[i] != NULL)
 			{
-//					exec_cmd_path_ck(tkn, i);
-				if (cmd->words[i][j] == '~')
+				j = 0;
+				while (cmd->words[i][j] != '\0')
 				{
-					if(j == 0)
-						j = expansion_tilde(tkn, &cmd->words[i], j);
+//						exec_cmd_path_ck(tkn, i);
+					if (cmd->words[i][j] == '~')
+					{
+						if(j == 0)
+							j = expansion_tilde(tkn, &cmd->words[i], j);
+					}
+					else if (cmd->words[i][j] == '$')
+						j = prepare_envp(&tkn, &cmd->words[i], j);
+					else if (cmd->words[i][j] == '\"')
+						j = prepare_quote(&tkn, &cmd->words[i], j);
+					else if (cmd->words[i][j] == '\'')
+						j = s_quoted(&cmd->words[i], j);
+					j++;
 				}
-				else if (cmd->words[i][j] == '$')
-					j = prepare_envp(&tkn, &cmd->words[i], j);
-				else if (cmd->words[i][j] == '\"')
-				{
-					printf("antes j= %d\n", j);
-					j = prepare_quote(&tkn, &cmd->words[i], j);
-					printf("depois j= %d\n", j);
-				}
-				else if (cmd->words[i][j] == '\'')
-					j = s_quoted(&cmd->words[i], j);
-				j++;
+				i++;
 			}
-			i++;
 		}
-	if (cmd->next == NULL)
-		flag = 1;
-	else
 		cmd = cmd->next;
 	}
 }

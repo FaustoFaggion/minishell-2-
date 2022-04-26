@@ -27,6 +27,8 @@ SRC_FILES		=	minishell.c \
 					exit.c \
 					exit_utils.c \
 					expansion_d_quote.c \
+					redirection.c \
+					exec_here_doc.c \
 				#	cmd_tab_utils.c \
 					exec_cmd_path_ck.c \
 					exec_cmd_tab.c \

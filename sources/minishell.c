@@ -6,7 +6,7 @@
 /*   By: fagiusep <fagiusep@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 11:20:20 by fagiusep          #+#    #+#             */
-/*   Updated: 2022/04/25 20:02:19 by fagiusep         ###   ########.fr       */
+/*   Updated: 2022/04/26 13:59:52 by fagiusep         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,6 @@ static void	init_tkn(t_tkn *tkn)
 	tkn->logname = NULL;
 	tkn->path = NULL;
 	tkn->path_0 = NULL;
-	tkn->fd_in = 0;
-	tkn->fd_out = 1;
 	copy_path(tkn);
 	copy_logname(tkn);
 	tkn->path_count = 0;
@@ -148,7 +146,6 @@ int	main(int argc, char *argv[], char *envp[])
 	while (1)
 	{
 //		handle_signal_prompt();
-		printf("\nenvp %s\n", tkn.envp[0]);
 		init_tkn(&tkn);
 		if (get_prompt(&tkn, &cmd_tab) == 0)
 		{
@@ -159,7 +156,9 @@ int	main(int argc, char *argv[], char *envp[])
 				{
 					create_cmd_tab(&tkn, &cmd_tab);
 					expansion(&tkn, &cmd_tab);
-					printf_cmd_tab(cmd_tab);
+					printf_cmd_tab(&cmd_tab);
+					redirection(&cmd_tab);
+					
 					//exec_cmd_tab(&tkn);
 					if (DEBUG == 1)
 						token_recog(&tkn);

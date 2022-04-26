@@ -28,6 +28,8 @@ typedef struct s_cmd
 	char			**redirects;
 	char			**here_docs;
 	int				pipes;
+	int				fd_out;
+	int				fd_in;
 	struct s_cmd	*next;
 }	t_cmd;
 
@@ -47,8 +49,6 @@ typedef struct s_tkn
 	char	*logname;
 	int		cmd_count;
 	int		len;
-	int		fd_out;
-	int		fd_in;
 	char	**amb_v;
 	int		amb_v_count;
 	int		exp_start;
@@ -61,7 +61,7 @@ typedef struct s_tkn
 	int		here_docs;
 }	t_tkn;
 
-void	printf_cmd_tab(t_cmd *cmd_tab);
+void	printf_cmd_tab(t_cmd **cmd_tab);
 
 int		get_prompt(t_tkn *tkn, t_cmd **cmd_tab);
 
@@ -87,8 +87,11 @@ int		join_token(char **quote, char **temp, char **exp_envp, char **temp_2);
 
 int		prepare_quote(t_tkn **tkn, char **token, int j);
 
-
 void	quoted_envp(char **tkn);
+
+void	redirection(t_cmd **cmd_tab);
+
+
 
 int		cmd_word(t_tkn *tkn, int i);
 

@@ -6,25 +6,27 @@
 /*   By: fagiusep <fagiusep@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 14:51:10 by fagiusep          #+#    #+#             */
-/*   Updated: 2022/04/25 20:02:16 by fagiusep         ###   ########.fr       */
+/*   Updated: 2022/04/26 13:38:26 by fagiusep         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	printf_cmd_tab(t_cmd *cmd_tab)
+void	printf_cmd_tab(t_cmd **cmd_tab)
 {
 	int		stop;
 	int		i;
 	t_cmd	*s_cmd;
 	int		x;
 	
-	s_cmd = cmd_tab;
+	s_cmd = *cmd_tab;
 	stop = 0;
 	x = 0;
-	while (stop == 0)
+	while (s_cmd != NULL)
 	{
 		i = 0;
+		printf("fd_out %d  ", s_cmd->fd_out);
+		printf("fd_in %d\n", s_cmd->fd_in);
 		printf ("s_cmd[%d]->words = ", x);
 		if (s_cmd->words != NULL)
 		{
@@ -59,11 +61,8 @@ void	printf_cmd_tab(t_cmd *cmd_tab)
 			}
 			printf ("%s  ", s_cmd->here_docs[i]);
 		}
-			printf ("\n");
-		if (s_cmd->next != NULL)
-			s_cmd = s_cmd->next;
-		else
-			stop = 1;
+		printf ("\n");
+		s_cmd = s_cmd->next;
 		x++;
 	}
 }

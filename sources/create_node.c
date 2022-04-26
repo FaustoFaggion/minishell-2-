@@ -2,6 +2,8 @@
 
 static void	malloc_node_elements(t_tkn *tkn, t_cmd *s_cmd)
 {
+	s_cmd->fd_in = 0;
+	s_cmd->fd_out = 1;
 	s_cmd->pipes = tkn->pipes;
 	s_cmd->next = NULL;
 	s_cmd->words = NULL;
@@ -15,7 +17,7 @@ static void	malloc_node_elements(t_tkn *tkn, t_cmd *s_cmd)
 		s_cmd->here_docs = ft_calloc(tkn->here_docs + 1, sizeof(char *));
 }
 
-static void	fill_node_elements_cont(t_tkn *tkn, char **array, int start)
+static void	fill_node_elements_cont(t_tkn *tkn, char **array, int start, int k)
 {
 	int	i;
 
@@ -25,7 +27,10 @@ static void	fill_node_elements_cont(t_tkn *tkn, char **array, int start)
 		while (array[i] != NULL)
 			i++;
 	}
-	array[i] = ft_strdup(tkn->tokens[start]);
+	if (k == 0)
+		array[i] = ft_strdup(tkn->tokens[start]);
+	else if (k == 1)
+		array[i] = ft_strdup(tkn->lexemas[start]);
 	i++;
 	array[i] = NULL;
 
@@ -35,20 +40,20 @@ static int	fill_node_elements(t_tkn *tkn, t_cmd *s_cmd, int start)
 {
 	if (ft_strncmp(tkn->lexemas[start], "WORD", 4) == 0
 		|| ft_strncmp(tkn->lexemas[start], "ASSIGNMENT_WORD", 15) == 0)
-			fill_node_elements_cont(tkn, s_cmd->words, start);
+			fill_node_elements_cont(tkn, s_cmd->words, start, 0);
 	else if (ft_strncmp(tkn->lexemas[start], "DLESS", 4) == 0)
 	{
-		fill_node_elements_cont(tkn, s_cmd->here_docs, start);
+		fill_node_elements_cont(tkn, s_cmd->here_docs, start, 1);
 		start++;
-		fill_node_elements_cont(tkn, s_cmd->here_docs, start);
+		fill_node_elements_cont(tkn, s_cmd->here_docs, start, 0);
 	}
 	else if (ft_strncmp(tkn->lexemas[start], "LESS", 4) == 0
 			|| ft_strncmp(tkn->lexemas[start], "GREAT", 5) == 0
 			|| ft_strncmp(tkn->lexemas[start], "DGREAT", 6) == 0)
 	{
-		fill_node_elements_cont(tkn, s_cmd->redirects, start);
+		fill_node_elements_cont(tkn, s_cmd->redirects, start, 1);
 		start++;
-		fill_node_elements_cont(tkn, s_cmd->redirects, start);
+		fill_node_elements_cont(tkn, s_cmd->redirects, start, 0);
 	}
 	start++;
 	return (start);
@@ -59,7 +64,6 @@ void	create_node(t_tkn *tkn, t_cmd **cmd_tab, int start, int end)
 	t_cmd	*s_cmd;
 	t_cmd	*last;
 
-	printf("entrei\n");
 	s_cmd = (t_cmd *)malloc(sizeof(t_cmd));
 	if (!s_cmd)
 		return ;

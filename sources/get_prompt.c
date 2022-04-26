@@ -43,7 +43,7 @@ int		get_prompt(t_tkn *tkn, t_cmd **cmd_tab)
 	if (!tkn->line)
 	{
 		exit_shell(tkn, cmd_tab);
-	//	free_tab(&tkn->envp, tkn->envp_count);
+		free_tab(&tkn->envp, tkn->envp_count);
 		rl_clear_history();
 		exit(0);
 	}
