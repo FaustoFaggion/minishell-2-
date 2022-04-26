@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_cmd_d_less.c                                  :+:      :+:    :+:   */
+/*   exec_here_doc.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fagiusep <fagiusep@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/26 17:24:54 by fagiusep          #+#    #+#             */
-/*   Updated: 2022/04/19 10:02:12 by fagiusep         ###   ########.fr       */
+/*   Updated: 2022/04/26 14:24:17 by fagiusep         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+/*
 static void	exec_cmd_less(t_tkn *tkn, int i)
 {
 	if(tkn->fd_in != 0)
@@ -61,7 +61,7 @@ static void	wr_line(char *tkn, int limiter, int fd[])
 	exit(0);
 }
 
-static int	exec_cmd_dless(t_tkn *tkn, int i)
+static int	exec_here_doc(t_tkn *tkn, int i)
 {
 	int	fd[2];
 	int	limiter;
@@ -85,11 +85,4 @@ static int	exec_cmd_dless(t_tkn *tkn, int i)
 	close(fd[0]);
 	return (2);
 }
-
-void	exec_cmd_d_less(t_tkn *tkn, int i)
-{
-	if (ft_strncmp(tkn->cmd_lex[i][0], "LESS", 4) == 0)
-		exec_cmd_less(tkn, i);
-	else if (ft_strncmp(tkn->cmd_lex[i][0], "DLESS", 5) == 0)
-		exec_cmd_dless(tkn, i);
-}
+*/
