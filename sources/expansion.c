@@ -6,7 +6,7 @@
 /*   By: fagiusep <fagiusep@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 16:07:10 by fagiusep          #+#    #+#             */
-/*   Updated: 2022/04/26 09:39:34 by fagiusep         ###   ########.fr       */
+/*   Updated: 2022/04/26 10:58:36 by fagiusep         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,13 @@ void	expansion(t_tkn *tkn, t_cmd **cmd_tab)
 				}
 				else if (cmd->words[i][j] == '$')
 					j = prepare_envp(&tkn, &cmd->words[i], j);
-/*				else if (tkn->tokens[i][j] == '\"')
-					j = prepare_quote(&tkn, &tkn->tokens[i], j, i);
-				else if (tkn->tokens[i][j] == '\'')
+				else if (cmd->words[i][j] == '\"')
+				{
+					printf("antes j= %d\n", j);
+					j = prepare_quote(&tkn, &cmd->words[i], j);
+					printf("depois j= %d\n", j);
+				}
+/*				else if (tkn->tokens[i][j] == '\'')
 					j = s_quoted(&tkn->tokens[i], j);
 */				j++;
 			}
