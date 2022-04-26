@@ -20,12 +20,13 @@ SRC_FILES		=	minishell.c \
 					create_cmd_tab.c \
 					create_node.c \
 					expansion.c \
+					expansion_tilde.c \
+					expansion_envp.c \
+					expansion_utils.c \
 					setup_error.c \
 					exit.c \
 					exit_utils.c \
-				#	expansion_utils.c \
-					expansion_d_quote.c \
-					expansion_envp.c \
+				#	expansion_d_quote.c \
 					cmd_tab_utils.c \
 					exec_cmd_path_ck.c \
 					exec_cmd_tab.c \
