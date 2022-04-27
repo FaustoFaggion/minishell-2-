@@ -68,17 +68,18 @@ static int	prepare_tilde(t_tkn **tkn, char **quote, int j)
 int	expansion_tilde(t_tkn *tkn, char **token, int j)
 {
 	char	*temp;
-	
+	char	*log;
+
 	temp = ft_substr(*token, 1, ft_strlen(*token) - 1);
-	
+	log = getenv("LOGNAME");
 	if ((*token)[j + 1] == '\0' || (*token)[j + 1] == '/')
 		j = prepare_tilde(&tkn, token, j);
 	else
 	{
-		if (ft_strncmp(tkn->logname, temp, ft_strlen(tkn->logname)) == 0)
+		if (ft_strncmp(log, temp, ft_strlen(log)) == 0)
 		{
-			if (temp[ft_strlen(tkn->logname + 1) + 1] == '/'
-				|| temp[ft_strlen(tkn->logname + 1) + 1] == '\0')
+			if (temp[ft_strlen(log + 1) + 1] == '/'
+				|| temp[ft_strlen(log + 1) + 1] == '\0')
 				j = prepare_tilde(&tkn, token, j);
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: fagiusep <fagiusep@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 11:20:20 by fagiusep          #+#    #+#             */
-/*   Updated: 2022/04/26 14:54:17 by fagiusep         ###   ########.fr       */
+/*   Updated: 2022/04/27 10:12:56 by fagiusep         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,30 +40,6 @@ static void	token_recog(t_tkn *tkn)
 	y = 0;
 }
 
-static void	copy_logname(t_tkn *tkn)
-{
-	int		i;
-	char	**temp;
-	
-	i = -1;
-	while (tkn->envp[++i] != NULL)
-	{
-		if (ft_strncmp("LOGNAME=", tkn->envp[i], 8) == 0)
-		{
-			temp = ft_split(tkn->envp[i], '=');
-			tkn->logname = ft_strdup(temp[1]);
-			if (tkn->logname == NULL)
-			{
-				write(2, "copy_logname error\n", 33);
-				return ;
-			}
-			free_tab(&temp, 2);
-			return ;
-		}
-	}
-	printf("1 logname: %s  ", tkn->logname);
-}
-
 static void	copy_path(t_tkn *tkn)
 {
 	int		i;
@@ -94,11 +70,8 @@ static void	init_tkn(t_tkn *tkn)
 	tkn->tokens = NULL;
 	tkn->lexemas = NULL;
 	tkn->cmd = NULL;
-	tkn->logname = NULL;
 	tkn->path = NULL;
-	tkn->path_0 = NULL;
 	copy_path(tkn);
-	copy_logname(tkn);
 	tkn->path_count = 0;
 	if (tkn->path != NULL)
 	{
@@ -156,10 +129,10 @@ int	main(int argc, char *argv[], char *envp[])
 				{
 					create_cmd_tab(&tkn, &cmd_tab);
 					expansion(&tkn, &cmd_tab);
-					printf_cmd_tab(&cmd_tab);
 					redirection(&cmd_tab);
 					exec_here_doc(&cmd_tab);
 					//exec_cmd_tab(&tkn);
+					printf_cmd_tab(&cmd_tab);
 					if (DEBUG == 1)
 						token_recog(&tkn);
 					exit_shell(&tkn, &cmd_tab);

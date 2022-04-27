@@ -45,8 +45,6 @@ typedef struct s_tkn
 	int		envp_count;
 	char	**path;
 	int		path_count;
-	char	*path_0;
-	char	*logname;
 	int		cmd_count;
 	int		len;
 	char	**amb_v;
