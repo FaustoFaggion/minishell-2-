@@ -6,7 +6,7 @@
 /*   By: fagiusep <fagiusep@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/26 17:24:54 by fagiusep          #+#    #+#             */
-/*   Updated: 2022/04/27 10:11:35 by fagiusep         ###   ########.fr       */
+/*   Updated: 2022/04/27 10:45:17 by fagiusep         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ void	exec_here_doc(t_cmd **cmd_tab)
 	int 	fd;
 	
 	s_cmd = *cmd_tab;
+	i = 0;
 	while (s_cmd != NULL)
 	{
 		if (s_cmd->here_docs != NULL)

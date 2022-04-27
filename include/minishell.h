@@ -27,16 +27,16 @@ typedef struct s_cmd
 	char			**words;
 	char			**redirects;
 	char			**here_docs;
+	char			*path;
 	int				pipes;
 	int				fd_out;
 	int				fd_in;
+	int				pid;
 	struct s_cmd	*next;
 }	t_cmd;
 
 typedef struct s_tkn
 {
-	char	***cmd;
-	char	***cmd_lex;
 	char	*line;
 	char	**lexemas;
 	char	**tokens;
@@ -45,18 +45,16 @@ typedef struct s_tkn
 	int		envp_count;
 	char	**path;
 	int		path_count;
-	int		cmd_count;
 	int		len;
-	char	**amb_v;
-	int		amb_v_count;
 	int		exp_start;
 	int		exp_flag;
 	int		exit_signal;
-	int		i_cmd;
+	int		pipe;
+	int		pid;
 	int		words;
-	int		pipes;
 	int		redirects;
 	int		here_docs;
+	int		end_cmd_pipe;
 }	t_tkn;
 
 void	printf_cmd_tab(t_cmd **cmd_tab);
@@ -91,11 +89,14 @@ void	redirection(t_cmd **cmd_tab);
 
 void	exec_here_doc(t_cmd **cmd_tab);
 
+void	exec_cmd_tab(t_cmd **cmd_tab, t_tkn *tkn);
+
+
+
 int		cmd_word(t_tkn *tkn, int i);
 
 int		exec_cmd_path_ck(t_tkn *tkn, int i);
 
-void	exec_cmd_tab(t_tkn *tkn);
 
 //void	exec_simple_cmd(t_tkn *tkn, int i);
 

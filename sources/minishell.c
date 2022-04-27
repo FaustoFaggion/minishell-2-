@@ -6,7 +6,7 @@
 /*   By: fagiusep <fagiusep@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 11:20:20 by fagiusep          #+#    #+#             */
-/*   Updated: 2022/04/27 10:12:56 by fagiusep         ###   ########.fr       */
+/*   Updated: 2022/04/27 13:32:24 by fagiusep         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,12 @@ static void	init_tkn(t_tkn *tkn)
 	tkn->line = NULL;
 	tkn->tokens = NULL;
 	tkn->lexemas = NULL;
-	tkn->cmd = NULL;
 	tkn->path = NULL;
+	tkn->pid = 0;
+	tkn->pipe = 0;
 	copy_path(tkn);
 	tkn->path_count = 0;
+	tkn->pid = 0;
 	if (tkn->path != NULL)
 	{
 		while (tkn->path[tkn->path_count] != NULL)
@@ -131,7 +133,7 @@ int	main(int argc, char *argv[], char *envp[])
 					expansion(&tkn, &cmd_tab);
 					redirection(&cmd_tab);
 					exec_here_doc(&cmd_tab);
-					//exec_cmd_tab(&tkn);
+				//	exec_cmd_tab(&cmd_tab, &tkn);
 					printf_cmd_tab(&cmd_tab);
 					if (DEBUG == 1)
 						token_recog(&tkn);

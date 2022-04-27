@@ -2,9 +2,9 @@
 
 static void	malloc_node_elements(t_tkn *tkn, t_cmd *s_cmd)
 {
-	s_cmd->fd_in = 0;
-	s_cmd->fd_out = 1;
-	s_cmd->pipes = tkn->pipes;
+	s_cmd->fd_in = dup(STDIN_FILENO);
+	s_cmd->fd_out = dup(STDOUT_FILENO);
+	s_cmd->pipes = tkn->end_cmd_pipe;
 	s_cmd->next = NULL;
 	s_cmd->words = NULL;
 	s_cmd->redirects = NULL;
@@ -59,6 +59,14 @@ static int	fill_node_elements(t_tkn *tkn, t_cmd *s_cmd, int start)
 	return (start);
 }
 
+static void is_exec_fork(t_cmd *s_cmd, t_tkn *tkn)
+{
+	if (s_cmd->words != NULL)
+	{
+		if (ft_strncmp(s_cmd->words[0], "cd\0", 3) != 0)
+			tkn->pid++;
+	}
+}
 void	create_node(t_tkn *tkn, t_cmd **cmd_tab, int start, int end)
 {
 	t_cmd	*s_cmd;
@@ -71,17 +79,16 @@ void	create_node(t_tkn *tkn, t_cmd **cmd_tab, int start, int end)
 	while (start < end)
 		start = fill_node_elements(tkn, s_cmd, start);
 	if (*cmd_tab == NULL)
-	{
 		*cmd_tab = s_cmd;
-//		printf("cmd_tab words %s\n", cmd_tab->words[0]);
-	}
 	else
 	{
-//		printf("cmd_tab words %s\n", cmd_tab->words[0]);
 		last = *cmd_tab;
 		while (last->next != NULL)
 			last = last->next;
 		last->next = s_cmd;
 	}
+	is_exec_fork(s_cmd, tkn);
+	printf ("PID %d\n", tkn->pid);
+	printf ("PIPE %d\n", tkn->pipe);
 }
 

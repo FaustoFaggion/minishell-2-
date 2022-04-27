@@ -6,7 +6,7 @@
 /*   By: fagiusep <fagiusep@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 14:51:10 by fagiusep          #+#    #+#             */
-/*   Updated: 2022/04/26 13:38:26 by fagiusep         ###   ########.fr       */
+/*   Updated: 2022/04/27 11:08:13 by fagiusep         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,12 +72,13 @@ static int	count_tab(t_tkn *tkn, int end)
 	tkn->words = 0;
 	tkn->redirects = 0;
 	tkn->here_docs = 0;
-	tkn->pipes = 0;
+	tkn->end_cmd_pipe = 0;
 	while (tkn->lexemas[end] != NULL)
 	{
 		if (ft_strncmp(tkn->lexemas[end], "PIPE", 4) == 0)
 		{
-			tkn->pipes++;
+			tkn->end_cmd_pipe++;
+			tkn->pipe++;
 			end++;
 			break ;
 		}
@@ -103,7 +104,7 @@ static int	count_tab(t_tkn *tkn, int end)
 	printf("words %d\n", tkn->words);
 	printf("redirects %d\n", tkn->redirects);
 	printf("here_docs %d\n", tkn->here_docs);
-	printf ("PIPES %d\n", tkn->pipes);
+	printf ("end_cmd_pipe %d\n", tkn->end_cmd_pipe);
 	return (end);
 }
 
