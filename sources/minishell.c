@@ -6,7 +6,7 @@
 /*   By: fagiusep <fagiusep@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 11:20:20 by fagiusep          #+#    #+#             */
-/*   Updated: 2022/04/27 19:46:49 by fagiusep         ###   ########.fr       */
+/*   Updated: 2022/04/28 07:32:35 by fagiusep         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,10 @@ static void	copy_path(t_tkn *tkn)
 	}
 }
 
-static void	init_tkn(t_tkn *tkn)
+static void	init_tkn(t_tkn *tkn, t_cmd **cmd_tab)
 {
+	*cmd_tab = NULL;
+//	(*cmd_tab)->path = NULL;
 	tkn->line = NULL;
 	tkn->tokens = NULL;
 	tkn->lexemas = NULL;
@@ -116,12 +118,11 @@ int	main(int argc, char *argv[], char *envp[])
 		global_exit = 1;
 		return (1);
 	}
-	cmd_tab = NULL;
 	envp_list_dup(&tkn, envp);
 	while (1)
 	{
 //		handle_signal_prompt();
-		init_tkn(&tkn);
+		init_tkn(&tkn, &cmd_tab);
 		if (get_prompt(&tkn, &cmd_tab) == 0)
 		{
 			if (token_analysis(&tkn) == 0)

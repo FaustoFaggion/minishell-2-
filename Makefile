@@ -30,20 +30,20 @@ SRC_FILES		=	minishell.c \
 					redirection.c \
 					exec_here_doc.c \
 					exec_cmd_tab.c \
+					built_in_cmd.c \
+					exec_cmd_cd.c \
+					exec_cmd_export.c \
+					exec_cmd_env.c \
+					exec_cmd_unset.c \
+					exec_cmd_exit.c \
 				#	cmd_tab_utils.c \
 					exec_cmd_path_ck.c \
 					exec_cmd_pipe.c \
 					exec_cmd_redirect.c \
 					exec_cmd_d_less.c \
 					exec_cmd_d_great.c \
-					built_in_cmd.c \
 					exec_cmd_echo.c \
 					exec_cmd_pwd.c \
-					exec_cmd_cd.c \
-					exec_cmd_export.c \
-					exec_cmd_unset.c \
-					exec_cmd_env.c \
-					exec_cmd_exit.c \
 					handle_signal_prompt.c \
 					handle_signal_parent.c \
 					handle_signal_child.c \

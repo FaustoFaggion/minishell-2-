@@ -91,6 +91,23 @@ void	exec_here_doc(t_cmd **cmd_tab);
 
 void	exec_cmd_tab(t_cmd **cmd_tab, t_tkn *tkn);
 
+int		built_in_cmd(t_cmd **s_cmd, t_tkn *tkn);
+
+void	exec_cmd_cd(t_cmd **s_cmd, t_tkn *tkn);
+
+void	exec_cmd_export(t_cmd **s_cmd, t_tkn *tkn);
+
+void	exec_cmd_env(t_tkn *tkn, int flag);
+
+void	exec_cmd_unset(char ***envp, char *cmd_arg, int *count);
+
+void	exec_cmd_exit(t_cmd **s_cmd, t_tkn *tkn);
+
+
+
+
+
+
 
 
 int		cmd_word(t_tkn *tkn, int i);
@@ -110,21 +127,15 @@ void	exec_cmd_d_great(t_tkn *tkn);
 
 void	exec_cmd_d_less(t_tkn *tkn, int i);
 
-int		built_in_cmd(t_tkn *tkn, int i);
 
 void	exec_cmd_echo(t_tkn *tkn, int i);
 
 void	exec_cmd_pwd(void);
 
-void	exec_cmd_cd(t_tkn *tkn, int i);
 
-void	exec_cmd_export(t_tkn *tkn, int i);
 
-void	exec_cmd_unset(char ***envp, char *cmd_arg, int *count);
 
-void	exec_cmd_env(t_tkn *tkn, int flag);
 
-void	exec_cmd_exit(t_tkn *tkn, int i);
 
 void	handle_signal_prompt(void);
 

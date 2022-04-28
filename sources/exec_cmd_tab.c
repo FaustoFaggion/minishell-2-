@@ -1,5 +1,35 @@
 #include "minishell.h"
 
+static int	check_built_in(t_cmd **s_cmd, t_tkn *tkn)
+{
+	if (ft_strncmp((*s_cmd)->words[0], "cd\0", 3) == 0)
+	{
+		built_in_cmd(s_cmd, tkn);
+		return (0);
+	}
+	if (ft_strncmp((*s_cmd)->words[0], "export\0", 7) == 0)
+	{
+		built_in_cmd(s_cmd, tkn);
+		return (0);
+	}
+	if (ft_strncmp((*s_cmd)->words[0], "unset\0", 7) == 0)
+	{
+		built_in_cmd(s_cmd, tkn);
+		return (0);
+	}
+	if (ft_strncmp((*s_cmd)->words[0], "exit\0", 5) == 0)
+	{
+		built_in_cmd(s_cmd, tkn);
+		return (0);
+	}
+/*	else if (ft_strncmp((*s_cmd)->words[0][0], "ASSIGNMENT_WORD", 15) == 0)
+	{
+		built_in_cmd(tkn, tkn->i_cmd);
+		return (0);
+	}
+*/	return (1);
+}
+
 int	path_setup(t_cmd **s_cmd, t_tkn *tkn)
 {
 	int		x;
@@ -75,6 +105,7 @@ static void	redirect_std_fileno(t_cmd **s_cmd, int fd[])
 		}
 		else if (ft_strncmp((*s_cmd)->redirects[i], "LESS", 4) == 0)
 		{
+			printf("entrei redirect less\n");
 			if((*s_cmd)->fd_in != -1)
 				close((*s_cmd)->fd_in);
 			i++;
@@ -110,7 +141,6 @@ static void	define_std_fileno(int fd[], t_cmd **s_cmd)
 			redirect_std_fileno(s_cmd, fd);
 			if ((*s_cmd)->fd_out == -1)
 				dup2(fd[1], STDOUT_FILENO);
-
 		}
 }
 
@@ -142,8 +172,8 @@ static void	exec_cmd(t_cmd **s_cmd, t_tkn *tkn)
 	int	pid;
 	int	wstatus;
 
-//	if (check_built_in(tkn) == 1)
-//	{
+	if (check_built_in(s_cmd, tkn) == 1)
+	{
 		if (pipe(fd) == -1)
 			exit(write(1, "pipe error\n", 11));
 		if (s_cmd_setup(s_cmd, tkn) == 0)
@@ -164,21 +194,20 @@ static void	exec_cmd(t_cmd **s_cmd, t_tkn *tkn)
 			dup2(fd[0], STDIN_FILENO);
 		}
 		close(fd[0]);
-//	}
+	}
 }
 
 void	exec_cmd_tab(t_cmd **cmd_tab, t_tkn *tkn)
 {
 	t_cmd	*s_cmd;
 	int		temp_in;
-//	int		temp_out;
-
+	
 	temp_in = dup(STDIN_FILENO);
-//	temp_out = dup(STDOUT_FILENO);
 	s_cmd = *cmd_tab;
 	while (s_cmd != NULL)
 	{
-		exec_cmd(&s_cmd, tkn);
+		if (s_cmd->words != NULL)
+			exec_cmd(&s_cmd, tkn);
 		s_cmd = s_cmd->next;
 	}
 	dup2(temp_in, STDIN_FILENO);
