@@ -150,16 +150,16 @@ static int	exec_child(t_tkn *tkn, int fd[], t_cmd **s_cmd)
 	close(fd[0]);
 	define_std_fileno(fd, s_cmd);
 	close(fd[1]);
-//	if (built_in_cmd(tkn, i) == 1)
-//	{
+	if (built_in_cmd(s_cmd, tkn) == 1)
+	{
 		if (execve((*s_cmd)->path, (*s_cmd)->words, tkn->envp) == -1)
 		{
 			write(2, "error execve\n", 13);
 			exit(1);
 		}
-//		exit_shell(tkn);
-//	}
-//	exit_shell(tkn);
+		exit_shell(tkn, s_cmd);
+	}
+	exit_shell(tkn, s_cmd);
 	free_tab(&tkn->envp, tkn->envp_count);
 	rl_clear_history();
 	exit(0);

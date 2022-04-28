@@ -103,6 +103,7 @@ void	exec_cmd_unset(char ***envp, char *cmd_arg, int *count);
 
 void	exec_cmd_exit(t_cmd **s_cmd, t_tkn *tkn);
 
+void	exec_cmd_echo(t_cmd **s_cmd);
 
 
 
@@ -128,7 +129,6 @@ void	exec_cmd_d_great(t_tkn *tkn);
 void	exec_cmd_d_less(t_tkn *tkn, int i);
 
 
-void	exec_cmd_echo(t_tkn *tkn, int i);
 
 void	exec_cmd_pwd(void);
 

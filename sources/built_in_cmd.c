@@ -6,7 +6,7 @@
 /*   By: fagiusep <fagiusep@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 10:08:07 by fagiusep          #+#    #+#             */
-/*   Updated: 2022/04/28 07:50:57 by fagiusep         ###   ########.fr       */
+/*   Updated: 2022/04/28 08:12:08 by fagiusep         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ static int	built_in_utils(t_cmd **s_cmd, t_tkn *tkn)
 		exec_cmd_unset(&tkn->envp, (*s_cmd)->words[1], &tkn->envp_count);
 		return (0);
 	}
-/*	else if (ft_strncmp((*s_cmd)->words[0], "env\0", 4) == 0)
+	else if (ft_strncmp((*s_cmd)->words[0], "env\0", 4) == 0)
 	{
-		if (tkn->cmd[i][1] == NULL)
+		if ((*s_cmd)->words[1] == NULL)
 			exec_cmd_env(tkn, 0);
 		return (0);
 	}
-*/	else if (ft_strncmp((*s_cmd)->words[0], "exit\0", 5) == 0)
+	else if (ft_strncmp((*s_cmd)->words[0], "exit\0", 5) == 0)
 	{
 		exec_cmd_exit(s_cmd, tkn);
 		return (0);
@@ -44,12 +44,12 @@ int	built_in_cmd(t_cmd **s_cmd, t_tkn *tkn)
 	int	ret;
 
 	ret = 0;
-/*	if (ft_strncmp((*s_cmd)->words[0], "echo\0", 5) == 0)
+	if (ft_strncmp((*s_cmd)->words[0], "echo\0", 5) == 0)
 	{
-		exec_cmd_echo(tkn, i);
+		exec_cmd_echo(s_cmd);
 		return (ret);
 	}
-	else if (ft_strncmp((*s_cmd)->words[0], "pwd\0", 4) == 0)
+/*	else if (ft_strncmp((*s_cmd)->words[0], "pwd\0", 4) == 0)
 	{
 		exec_cmd_pwd();
 		return (ret);
