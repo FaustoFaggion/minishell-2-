@@ -1,35 +1,5 @@
 #include "minishell.h"
 
-static int	exec_child(t_tkn *tkn, t_cmd **s_cmd)
-{
-	
-//	handle_signal_child();
-	if ((*s_cmd)->fd_in != STDIN_FILENO)
-	{
-		dup2((*s_cmd)->fd_in, STDIN_FILENO);
-		close((*s_cmd)->fd_in);
-	}
-	if ((*s_cmd)->fd_out != STDOUT_FILENO)
-	{
-		dup2((*s_cmd)->fd_out, STDOUT_FILENO);
-		close((*s_cmd)->fd_out);
-	}
-//	if (built_in_cmd(tkn, i) == 1)
-//	{
-		if (execve((*s_cmd)->path, (*s_cmd)->words, tkn->envp) == -1)
-		{
-			write(2, "error execve\n", 13);
-			exit(1);
-		}
-	//	exit_shell(tkn);
-//	}
-	//exit_shell(tkn);
-	free_tab(&tkn->envp, tkn->envp_count);
-	rl_clear_history();
-	exit(0);
-	return (0);
-}
-
 int	path_setup(t_cmd **s_cmd, t_tkn *tkn)
 {
 	int		x;
@@ -58,69 +28,158 @@ int	path_setup(t_cmd **s_cmd, t_tkn *tkn)
 	setup_error((*s_cmd)->words[0], 0);
 	return (1);
 }
-static void	s_cmd_setup(t_cmd **s_cmd, t_tkn *tkn)
+static int	s_cmd_setup(t_cmd **s_cmd, t_tkn *tkn)
 {
+	int	ret;
+
+	ret = 0;
 	if (ft_strchr((*s_cmd)->words[0], '/') == NULL)
 	{
 		//if (built in)
-		path_setup(s_cmd, tkn);
+		ret = path_setup(s_cmd, tkn);
+		printf("s_cmd->path %s\n", (*s_cmd)->path);
 	}
+	return (ret);
+}
+
+static void	redirect_std_fileno(t_cmd **s_cmd, int fd[])
+{
+	char	*temp;
+	int		flag;
+	int		i;
+
+	close(fd[0]);
+//	(*s_cmd)->fd_out = -1;
+//	(*s_cmd)->fd_in = -1;
+	flag = 0;
+	i = 0;
+	while ((*s_cmd)->redirects[i] != NULL)
+	{
+		if (ft_strncmp((*s_cmd)->redirects[i], "DGREAT", 6) == 0)
+		{
+			if((*s_cmd)->fd_out != -1)
+				close((*s_cmd)->fd_out);
+			i++;
+			(*s_cmd)->fd_out = open((*s_cmd)->redirects[i], O_RDWR | O_APPEND
+					| O_CREAT, 0777);
+			flag = 1;
+		}
+		else if (ft_strncmp((*s_cmd)->redirects[i], "GREAT", 5) == 0)
+		{
+			if ((*s_cmd)->fd_out != -1)
+				close((*s_cmd)->fd_out);
+			i++;
+			(*s_cmd)->fd_out = open((*s_cmd)->redirects[i], O_RDWR | O_TRUNC
+					| O_CREAT, 0777);
+			flag = 1;
+		}
+		else if (ft_strncmp((*s_cmd)->redirects[i], "LESS", 4) == 0)
+		{
+			if((*s_cmd)->fd_in != -1)
+				close((*s_cmd)->fd_in);
+			i++;
+			(*s_cmd)->fd_in = open((*s_cmd)->redirects[i], O_RDONLY);
+			dup2((*s_cmd)->fd_in, STDIN_FILENO);			
+		}
+		else
+			break;
+		i++;
+	}
+	if (flag == 1)
+	{
+		temp = ft_get_next_line((*s_cmd)->fd_out);
+		if ((*s_cmd)->fd_out < 0)
+		{
+			printf("bash: s: Arquivo ou diretório inexistente\n");
+			return ;
+		} 
+		else
+			dup2((*s_cmd)->fd_out, STDOUT_FILENO);
+	}
+}
+
+static void	define_std_fileno(int fd[], t_cmd **s_cmd)
+{
+		if ((*s_cmd)->redirects == NULL)
+		{
+			if ((*s_cmd)->next != NULL)
+				dup2(fd[1], STDOUT_FILENO);
+		}
+		else
+		{
+			redirect_std_fileno(s_cmd, fd);
+			if ((*s_cmd)->fd_out == -1)
+				dup2(fd[1], STDOUT_FILENO);
+
+		}
+}
+
+static int	exec_child(t_tkn *tkn, int fd[], t_cmd **s_cmd)
+{
+//	handle_signal_child();
+	close(fd[0]);
+	define_std_fileno(fd, s_cmd);
+	close(fd[1]);
+//	if (built_in_cmd(tkn, i) == 1)
+//	{
+		if (execve((*s_cmd)->path, (*s_cmd)->words, tkn->envp) == -1)
+		{
+			write(2, "error execve\n", 13);
+			exit(1);
+		}
+//		exit_shell(tkn);
+//	}
+//	exit_shell(tkn);
+	free_tab(&tkn->envp, tkn->envp_count);
+	rl_clear_history();
+	exit(0);
+	return (0);
+}
+
+static void	exec_cmd(t_cmd **s_cmd, t_tkn *tkn)
+{
+	int	fd[2];
+	int	pid;
+	int	wstatus;
+
+//	if (check_built_in(tkn) == 1)
+//	{
+		if (pipe(fd) == -1)
+			exit(write(1, "pipe error\n", 11));
+		if (s_cmd_setup(s_cmd, tkn) == 0)
+		{
+			pid = fork();
+			if (pid < 0)
+				exit(write(1, "fork error\n", 11));
+			if (pid == 0)
+				exec_child(tkn, fd, s_cmd);
+			waitpid(pid, &wstatus, 0);
+			if (!WIFSIGNALED(wstatus))
+				global_exit = WEXITSTATUS(wstatus);
+		}
+//		handle_signal_parent();
+		close(fd[1]);
+		if ((*s_cmd)->next != NULL)
+		{
+			dup2(fd[0], STDIN_FILENO);
+		}
+		close(fd[0]);
+//	}
 }
 
 void	exec_cmd_tab(t_cmd **cmd_tab, t_tkn *tkn)
 {
 	t_cmd	*s_cmd;
-	int		fd[2];
-	int		**pipes;
-	int		i;
+	int		temp_in;
+//	int		temp_out;
 
+	temp_in = dup(STDIN_FILENO);
+//	temp_out = dup(STDOUT_FILENO);
 	s_cmd = *cmd_tab;
-	
-	pipes = (int **)calloc((tkn->pid * 2) + 1, sizeof(int *));
-	i = 0;
-	while (i < tkn->pid)
+	while (s_cmd != NULL)
 	{
-		if(pipe(fd) == -1)
-			exit(write(1, "pipe error\n", 11));
-		pipes[i] = (int *)calloc(2, sizeof(int));
-		pipes[i][0] = fd[0];
-		pipes[i][1] = fd[1];
-		i++;
-	}
-	pipes[i] = NULL;
-	i = 0;
-	printf("fd[0] %d, fd[1] %d\n", pipes[0][0], pipes[0][1]);
-	while(s_cmd != NULL)
-	{
-//		if (s_cmd->pipes == 1) verificar builtins que não executam fork
-//		{
-			s_cmd_setup(&s_cmd, tkn);
-			if (s_cmd->pipes == 1)
-			{
-				if (s_cmd->redirects == NULL)
-					s_cmd->fd_out = pipes[i][1];
-			}
-			if (s_cmd->next != NULL)
-				s_cmd->next->fd_in = pipes[i][0];
-			
-//			dup2(s_cmd->fd_in, STDIN_FILENO);
-//			dup2(s_cmd->fd_out, STDOUT_FILENO);
-			
-			s_cmd->pid = fork();
-			i++;
-			if (s_cmd->pid < 0)
-				exit(write(1, "fork error\n", 11));
-			if (s_cmd->pid == 0)
-				exec_child(tkn, &s_cmd);
-//		}
-		close(pipes[i][1]);
-		close(pipes[i][0]);
+		exec_cmd(&s_cmd, tkn);
 		s_cmd = s_cmd->next;
 	}
-	while (i > 0)
-	{
-		waitpid(-1, NULL, 0);
-		i--;
-	}
-	//dup2(fd[0], STDOUT_FILENO);
+	dup2(temp_in, STDIN_FILENO);
 }

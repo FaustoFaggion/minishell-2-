@@ -6,7 +6,7 @@
 /*   By: fagiusep <fagiusep@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 11:19:26 by fagiusep          #+#    #+#             */
-/*   Updated: 2022/04/27 10:14:38 by fagiusep         ###   ########.fr       */
+/*   Updated: 2022/04/27 17:29:05 by fagiusep         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,10 @@ void	exit_shell(t_tkn *tkn, t_cmd **cmd_tab)
 					i++;
 				free_tab(&(*cmd_tab)->here_docs, i);
 			}
-		
-		swap = *cmd_tab;
-		*cmd_tab = (*cmd_tab)->next;
-		free(swap);
+			free((*cmd_tab)->path);
+			swap = *cmd_tab;
+			*cmd_tab = (*cmd_tab)->next;
+			free(swap);
 		}
 	}
 	exit_utils(tkn);

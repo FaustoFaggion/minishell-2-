@@ -6,7 +6,7 @@
 /*   By: fagiusep <fagiusep@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 11:20:20 by fagiusep          #+#    #+#             */
-/*   Updated: 2022/04/27 13:32:24 by fagiusep         ###   ########.fr       */
+/*   Updated: 2022/04/27 19:46:49 by fagiusep         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,9 +131,9 @@ int	main(int argc, char *argv[], char *envp[])
 				{
 					create_cmd_tab(&tkn, &cmd_tab);
 					expansion(&tkn, &cmd_tab);
-					redirection(&cmd_tab);
+				//	redirection(&cmd_tab);
 					exec_here_doc(&cmd_tab);
-				//	exec_cmd_tab(&cmd_tab, &tkn);
+					exec_cmd_tab(&cmd_tab, &tkn);
 					printf_cmd_tab(&cmd_tab);
 					if (DEBUG == 1)
 						token_recog(&tkn);

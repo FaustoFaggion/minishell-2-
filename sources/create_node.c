@@ -2,8 +2,8 @@
 
 static void	malloc_node_elements(t_tkn *tkn, t_cmd *s_cmd)
 {
-	s_cmd->fd_in = dup(STDIN_FILENO);
-	s_cmd->fd_out = dup(STDOUT_FILENO);
+	s_cmd->fd_in = -1;
+	s_cmd->fd_out = -1;
 	s_cmd->pipes = tkn->end_cmd_pipe;
 	s_cmd->next = NULL;
 	s_cmd->words = NULL;
